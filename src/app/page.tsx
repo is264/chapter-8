@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../constants/api";
-import type { Post } from "../types/Post";
+import { API_BASE_URL } from "./_constants/api";
+import type { Post } from "./_types/Post";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);

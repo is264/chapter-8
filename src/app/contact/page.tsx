@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { ZodError } from "zod";
-import { ErrorMessage } from "../../components/ErrorMessage";
-import { FormGroup } from "../../components/FormGroup";
-import { Input } from "../../components/Input";
-import { Label } from "../../components/Label";
-import { TextArea } from "../../components/TextArea";
-import { API_BASE_URL } from "../../constants/api";
-import { contactSchema } from "../../lib/validation/contactForm";
+import { API_BASE_URL } from "../_constants/api";
+import { ErrorMessage } from "./_components/ErrorMessage";
+import { FormGroup } from "./_components/FormGroup";
+import { Input } from "./_components/Input";
+import { Label } from "./_components/Label";
+import { TextArea } from "./_components/TextArea";
+import { contactSchema } from "./_lib/validation/contactForm";
 
 type Form = {
   name: string;
