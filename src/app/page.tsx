@@ -13,7 +13,8 @@ export default function Home() {
     const fetcher = async () => {
       const res = await fetch(`${MICROCMS_API_BASE_URL}/posts`, {
         headers: {
-          "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY as string,
+          "X-MICROCMS-API-KEY": process.env
+            .NEXT_PUBLIC_MICROCMS_API_KEY as string,
         },
       });
       const { contents } = await res.json();
@@ -33,7 +34,7 @@ export default function Home() {
 
   return (
     <ul className="flex flex-col gap-8 w-[800px] mx-auto my-10">
-      {posts?.length > 0 ? (
+      {posts.length > 0 ? (
         posts.map((post: MicroCmsPost) => {
           return (
             <li key={post.id} className="border border-[#ccc] p-4">
