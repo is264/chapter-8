@@ -2,18 +2,23 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "./_constants/api";
-import type { Post } from "./_types/Post";
+import { MICROCMS_API_BASE_URL } from "./_constants/api";
+import type { MicroCmsPost } from "./_types/MicroCmsPost";
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<MicroCmsPost[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetcher = async () => {
-      const res = await fetch(`${API_BASE_URL}/posts`);
-      const data = await res.json();
-      setPosts(data.posts);
+      const res = await fetch(`${MICROCMS_API_BASE_URL}/posts`, {
+        headers: {
+          "X-MICROCMS-API-KEY": process.env
+            .NEXT_PUBLIC_MICROCMS_API_KEY as string,
+        },
+      });
+      const { contents } = await res.json();
+      setPosts(contents);
       setIsLoading(false);
     };
     fetcher();
@@ -30,7 +35,7 @@ export default function Home() {
   return (
     <ul className="flex flex-col gap-8 w-[800px] mx-auto my-10">
       {posts.length > 0 ? (
-        posts.map((post: Post) => {
+        posts.map((post: MicroCmsPost) => {
           return (
             <li key={post.id} className="border border-[#ccc] p-4">
               <Link href={`/posts/${post.id}`}>
@@ -39,13 +44,13 @@ export default function Home() {
                     {new Date(post.createdAt).toLocaleDateString()}
                   </div>
                   <div className="flex justify-end gap-2">
-                    {post.categories.map((category: string) => {
+                    {post.categories.map((category) => {
                       return (
                         <span
-                          key={category}
+                          key={category.id}
                           className="text-xs text-[#0066cc] border border-[#0066cc] rounded-sm px-2 py-1"
                         >
-                          {category}
+                          {category.name}
                         </span>
                       );
                     })}
