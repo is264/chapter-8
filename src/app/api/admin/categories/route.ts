@@ -1,0 +1,63 @@
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../lib/prisma";
+
+/**
+ * カテゴリーの作成時のリクエストbodyの型
+ */
+interface CreateCategoryRequestBody {
+  /** カテゴリー名 */
+  name: string;
+}
+
+/**
+ * カテゴリーの一覧を取得するAPI
+ * @param request - リクエスト
+ * @returns レスポンス
+ */
+export const GET = async (request: NextRequest) => {
+  try {
+    // Categoryテーブルのレコードを取得
+    const categories = await prisma.category.findMany({
+      // 作成日時の降順
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return NextResponse.json({ status: "OK", categories }, { status: 200 });
+  } catch (error) {
+    if (error instanceof Error)
+      return NextResponse.json({ status: error.message }, { status: 400 });
+  }
+};
+
+/**
+ * カテゴリーの作成を行うAPI
+ * @param request - リクエスト
+ * @param context - コンテキスト
+ * @returns レスポンス
+ */
+export const POST = async (request: NextRequest, context: any) => {
+  try {
+    // リクエストのbodyを取得
+    const body = await request.json();
+    const { name }: CreateCategoryRequestBody = body;
+
+    // Categoryテーブルにレコードを作成
+    const data = await prisma.category.create({
+      data: {
+        name,
+      },
+    });
+
+    return NextResponse.json({
+      status: "OK",
+      message: "作成しました",
+      id: data.id,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ status: error.message }, { status: 400 });
+    }
+  }
+};
