@@ -9,6 +9,7 @@ interface CategoryFormProps {
   setName: (name: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onDelete?: () => void;
+  disabled: boolean;
 }
 export const CategoryForm = ({
   mode,
@@ -16,6 +17,7 @@ export const CategoryForm = ({
   setName,
   onSubmit,
   onDelete,
+  disabled,
 }: CategoryFormProps) => {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
@@ -26,12 +28,14 @@ export const CategoryForm = ({
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          disabled={disabled}
         />
       </div>
       <div className="w-100 space-y-1">
         <Button
           type="submit"
           className="bg-indigo-700 hover:bg-indigo-800 text-white"
+          disabled={disabled}
         >
           {mode === POST_FORM_MODE.CREATE ? "作成" : "更新"}
         </Button>
@@ -40,6 +44,7 @@ export const CategoryForm = ({
             type="button"
             className="bg-red-600 hover:bg-red-700 text-white ms-3"
             onClick={onDelete}
+            disabled={disabled}
           >
             削除
           </Button>

@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 interface CategorySelectProps {
   selectedCategories: Category[];
   setSelectedCategories: (categories: Category[]) => void;
+  disabled: boolean;
 }
 
 export const CategorySelect = ({
   selectedCategories = [],
   setSelectedCategories,
+  disabled,
 }: CategorySelectProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -49,6 +51,7 @@ export const CategorySelect = ({
         popoverAnimation: "none",
         optionHoverAnimation: "none",
       }}
+      disabled={disabled}
     />
   );
 };

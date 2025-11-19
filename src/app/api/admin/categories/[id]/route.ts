@@ -1,13 +1,6 @@
+import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
-
-/**
- * カテゴリーの更新時のリクエストbodyの型
- */
-interface UpdateCategoryRequestBody {
-  /** カテゴリー名 */
-  name: string;
-}
 
 /**
  * カテゴリーの詳細を取得するAPI
@@ -48,7 +41,7 @@ export const PUT = async (
 ) => {
   const { id } = params;
 
-  const { name }: UpdateCategoryRequestBody = await request.json();
+  const { name }: CategoryRequestBody = await request.json();
 
   try {
     // idを指定してCategoryテーブルのレコードを更新

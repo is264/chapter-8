@@ -3,6 +3,7 @@
 import { POST_FORM_MODE } from "@/app/_constants/const";
 import { Category } from "@/app/_types/Category";
 import { Post } from "@/app/_types/Post";
+import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PostForm } from "../_components/PostForm";
@@ -12,34 +13,57 @@ export default function AdminPostsIdPage() {
   const [content, setContent] = useState<string>("");
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { id } = useParams();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 記事を更新します。
-    await fetch(`/api/admin/posts/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, content, thumbnailUrl, categories }),
-    });
+    try {
+      const requestBody: PostRequestBody = {
+        title,
+        content,
+        categories,
+        thumbnailUrl,
+      };
 
-    alert("記事を更新しました。");
+      // 記事を更新します。
+      await fetch(`/api/admin/posts/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      alert("記事を更新しました。");
+    } catch (error) {
+      alert("記事の更新に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeletePost = async () => {
     if (!confirm("記事を削除しますか？")) return;
 
-    await fetch(`/api/admin/posts/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      setIsSubmitting(true);
+      await fetch(`/api/admin/posts/${id}`, {
+        method: "DELETE",
+      });
 
-    alert("記事を削除しました。");
+      alert("記事を削除しました。");
 
-    router.push("/admin/posts");
+      router.push("/admin/posts");
+    } catch (error) {
+      alert("記事の削除に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -72,6 +96,7 @@ export default function AdminPostsIdPage() {
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}
         onDelete={handleDeletePost}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

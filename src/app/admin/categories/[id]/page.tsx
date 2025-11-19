@@ -2,40 +2,61 @@
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
 import { Category } from "@/app/_types/Category";
+import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CategoryForm } from "../_components/CategoryForm";
 
 export default function AdminCategoriesIdPage() {
   const [name, setName] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { id } = useParams();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // カテゴリーを更新します。
-    await fetch(`/api/admin/categories/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name }),
-    });
+    try {
+      const requestBody: CategoryRequestBody = {
+        name,
+      };
 
-    alert("カテゴリーを更新しました。");
+      // カテゴリーを更新します。
+      await fetch(`/api/admin/categories/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      alert("カテゴリーを更新しました。");
+    } catch (error) {
+      alert("カテゴリーの更新に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeleteCategory = async () => {
     if (!confirm("カテゴリーを削除しますか？")) return;
 
-    await fetch(`/api/admin/categories/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      setIsSubmitting(true);
+      await fetch(`/api/admin/categories/${id}`, {
+        method: "DELETE",
+      });
 
-    alert("カテゴリーを削除しました。");
+      alert("カテゴリーを削除しました。");
 
-    router.push("/admin/categories");
+      router.push("/admin/categories");
+    } catch (error) {
+      alert("カテゴリーの削除に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -59,6 +80,7 @@ export default function AdminCategoriesIdPage() {
         setName={setName}
         onSubmit={handleSubmit}
         onDelete={handleDeleteCategory}
+        disabled={isSubmitting}
       />
     </div>
   );

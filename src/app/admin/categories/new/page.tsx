@@ -1,27 +1,41 @@
 "use client";
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
+import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CategoryForm } from "../_components/CategoryForm";
 
 export default function AdminCategoriesNewPage() {
   const [name, setName] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await fetch("/api/admin/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name }),
-    });
+    try {
+      setIsSubmitting(true);
+      const requestBody: CategoryRequestBody = {
+        name,
+      };
 
-    alert("カテゴリーを作成しました。");
-    router.push(`/admin/categories`);
+      await fetch("/api/admin/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      alert("カテゴリーを作成しました。");
+      router.push(`/admin/categories`);
+    } catch (error) {
+      alert("カテゴリーの作成に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -34,6 +48,7 @@ export default function AdminCategoriesNewPage() {
         name={name}
         setName={setName}
         onSubmit={handleSubmit}
+        disabled={isSubmitting}
       />
     </div>
   );

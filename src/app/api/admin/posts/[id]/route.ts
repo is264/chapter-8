@@ -1,15 +1,6 @@
+import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
-
-/**
- * POSTの更新時のリクエストbodyの型
- */
-interface UpdatePostRequestBody {
-  title: string;
-  content: string;
-  categories: { id: number }[];
-  thumbnailUrl: string;
-}
 
 /**
  * POSTの詳細を取得するAPI
@@ -62,7 +53,7 @@ export const PUT = async (
 ) => {
   const { id } = params;
 
-  const { title, content, categories, thumbnailUrl }: UpdatePostRequestBody =
+  const { title, content, categories, thumbnailUrl }: PostRequestBody =
     await request.json();
 
   try {

@@ -2,6 +2,7 @@
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
 import { Category } from "@/app/_types/Category";
+import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PostForm } from "../_components/PostForm";
@@ -11,22 +12,36 @@ export default function AdminPostsNewPage() {
   const [content, setContent] = useState<string>("");
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 記事を作成します。
-    await fetch("/api/admin/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, content, thumbnailUrl, categories }),
-    });
+    try {
+      setIsSubmitting(true);
+      const requestBody: PostRequestBody = {
+        title,
+        content,
+        categories,
+        thumbnailUrl,
+      };
+      await fetch("/api/admin/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    alert("記事を作成しました。");
-    router.push(`/admin/posts`);
+      alert("記事を作成しました。");
+      router.push(`/admin/posts`);
+    } catch (error: unknown) {
+      alert("記事の作成に失敗しました");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -45,6 +60,7 @@ export default function AdminPostsNewPage() {
         selectedCategories={categories}
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

@@ -1,19 +1,6 @@
+import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
-
-/**
- * POSTの作成時のリクエストbodyの型
- */
-interface CreatePostRequestBody {
-  /** タイトル */
-  title: string;
-  /** 内容 */
-  content: string;
-  /** カテゴリー */
-  categories: { id: number }[];
-  /** サムネイルURL */
-  thumbnailUrl: string;
-}
 
 /**
  * POSTの一覧を取得するAPI
@@ -57,8 +44,7 @@ export const POST = async (request: NextRequest) => {
   try {
     // リクエストのbodyを取得
     const body = await request.json();
-    const { title, content, categories, thumbnailUrl }: CreatePostRequestBody =
-      body;
+    const { title, content, categories, thumbnailUrl }: PostRequestBody = body;
 
     // POSTテーブルにレコードを作成
     const data = await prisma.post.create({

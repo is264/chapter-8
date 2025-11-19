@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
-
-/**
- * カテゴリーの作成時のリクエストbodyの型
- */
-interface CreateCategoryRequestBody {
-  /** カテゴリー名 */
-  name: string;
-}
+import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 
 /**
  * カテゴリーの一覧を取得するAPI
@@ -39,7 +32,7 @@ export const POST = async (request: NextRequest) => {
   try {
     // リクエストのbodyを取得
     const body = await request.json();
-    const { name }: CreateCategoryRequestBody = body;
+    const { name }: CategoryRequestBody = body;
 
     // Categoryテーブルにレコードを作成
     const data = await prisma.category.create({
