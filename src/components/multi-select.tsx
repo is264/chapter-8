@@ -794,6 +794,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 
           <PopoverTrigger asChild={asChild}>
             <Button
+              type="button"
               ref={buttonRef}
               {...props}
               onClick={handleTogglePopover}
