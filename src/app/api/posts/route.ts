@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 
 /**
  * POSTの一覧を取得するAPI
- * @param request - リクエスト
  * @returns レスポンス
  */
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
   try {
     // Postテーブルのレコードを全て取得
     const posts = await prisma.post.findMany({

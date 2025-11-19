@@ -17,10 +17,9 @@ interface CreatePostRequestBody {
 
 /**
  * POSTの一覧を取得するAPI
- * @param request - リクエスト
  * @returns レスポンス
  */
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
   try {
     // Postテーブルのレコードを全て取得
     const posts = await prisma.post.findMany({
@@ -52,10 +51,9 @@ export const GET = async (request: NextRequest) => {
 /**
  * POSTの作成を行うAPI
  * @param request - リクエスト
- * @param context - コンテキスト
  * @returns レスポンス
  */
-export const POST = async (request: NextRequest, context: any) => {
+export const POST = async (request: NextRequest) => {
   try {
     // リクエストのbodyを取得
     const body = await request.json();

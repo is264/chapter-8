@@ -11,10 +11,9 @@ interface CreateCategoryRequestBody {
 
 /**
  * カテゴリーの一覧を取得するAPI
- * @param request - リクエスト
  * @returns レスポンス
  */
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
   try {
     // Categoryテーブルのレコードを取得
     const categories = await prisma.category.findMany({
@@ -34,10 +33,9 @@ export const GET = async (request: NextRequest) => {
 /**
  * カテゴリーの作成を行うAPI
  * @param request - リクエスト
- * @param context - コンテキスト
  * @returns レスポンス
  */
-export const POST = async (request: NextRequest, context: any) => {
+export const POST = async (request: NextRequest) => {
   try {
     // リクエストのbodyを取得
     const body = await request.json();
