@@ -1,8 +1,19 @@
-export type Post = {
+import { Category } from "./Category";
+
+/**
+ * POSTの型
+ */
+export interface Post {
+  /** POST ID */
   id: number;
+  /** タイトル */
   title: string;
+  /** 内容 */
   content: string;
+  /** カテゴリー */
+  postCategories: { category: Category }[];
+  /** サムネイルURL */
   thumbnailUrl: string;
-  categories: string[];
+  /** 作成日時 */
   createdAt: string;
-};
+}
