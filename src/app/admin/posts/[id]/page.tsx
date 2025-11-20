@@ -96,7 +96,7 @@ export default function AdminPostsIdPage() {
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}
         onDelete={handleDeletePost}
-        isSubmitting={isSubmitting}
+        disabled={isSubmitting}
       />
     </div>
   );

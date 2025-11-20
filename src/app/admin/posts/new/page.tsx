@@ -60,7 +60,7 @@ export default function AdminPostsNewPage() {
         selectedCategories={categories}
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
+        disabled={isSubmitting}
       />
     </div>
   );

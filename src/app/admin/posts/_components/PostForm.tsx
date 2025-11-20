@@ -18,7 +18,7 @@ interface PostFormProps {
   setSelectedCategories: (categories: Category[]) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onDelete?: () => void;
-  isSubmitting: boolean;
+  disabled: boolean;
 }
 
 export const PostForm = ({
@@ -33,7 +33,7 @@ export const PostForm = ({
   setSelectedCategories,
   onSubmit,
   onDelete,
-  isSubmitting,
+  disabled,
 }: PostFormProps) => {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
@@ -44,7 +44,7 @@ export const PostForm = ({
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          disabled={isSubmitting}
+          disabled={disabled}
         />
       </div>
       <div className="grid w-full gap-1">
@@ -54,7 +54,7 @@ export const PostForm = ({
           rows={10}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          disabled={isSubmitting}
+          disabled={disabled}
         />
       </div>
       <div className="grid w-full items-center gap-1">
@@ -64,7 +64,7 @@ export const PostForm = ({
           id="thumbnailUrl"
           value={thumbnailUrl}
           onChange={(e) => setThumbnailUrl(e.target.value)}
-          disabled={isSubmitting}
+          disabled={disabled}
         />
       </div>
       <div className="grid w-full items-center gap-1">
@@ -72,14 +72,14 @@ export const PostForm = ({
         <CategorySelect
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
-          disabled={isSubmitting}
+          disabled={disabled}
         />
       </div>
       <div className="w-100 space-y-1">
         <Button
           type="submit"
           className="bg-indigo-700 hover:bg-indigo-800 text-white"
-          disabled={isSubmitting}
+          disabled={disabled}
         >
           {mode === POST_FORM_MODE.CREATE ? "作成" : "更新"}
         </Button>
@@ -88,7 +88,7 @@ export const PostForm = ({
             type="button"
             className="bg-red-600 hover:bg-red-700 text-white ms-3"
             onClick={onDelete}
-            disabled={isSubmitting}
+            disabled={disabled}
           >
             削除
           </Button>
