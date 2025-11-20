@@ -1,12 +1,21 @@
+import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
+import { supabase } from "@/utils/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
-import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 
 /**
  * カテゴリーの一覧を取得するAPI
  * @returns レスポンス
  */
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     // Categoryテーブルのレコードを取得
     const categories = await prisma.category.findMany({
@@ -29,6 +38,14 @@ export const GET = async () => {
  * @returns レスポンス
  */
 export const POST = async (request: NextRequest) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     // リクエストのbodyを取得
     const body = await request.json();

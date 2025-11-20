@@ -1,6 +1,7 @@
 "use client";
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Category } from "@/app/_types/Category";
 import { CategoryRequestBody } from "@/app/_types/CategoryRequestBody";
 import { useParams, useRouter } from "next/navigation";
@@ -13,8 +14,12 @@ export default function AdminCategoriesIdPage() {
   const { id } = useParams();
   const router = useRouter();
 
+  const { token } = useSupabaseSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) return;
 
     try {
       const requestBody: CategoryRequestBody = {
@@ -26,6 +31,7 @@ export default function AdminCategoriesIdPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token,
         },
         body: JSON.stringify(requestBody),
       });
@@ -42,10 +48,16 @@ export default function AdminCategoriesIdPage() {
   const handleDeleteCategory = async () => {
     if (!confirm("カテゴリーを削除しますか？")) return;
 
+    if (!token) return;
+
     try {
       setIsSubmitting(true);
       await fetch(`/api/admin/categories/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       });
 
       alert("カテゴリーを削除しました。");
@@ -60,14 +72,21 @@ export default function AdminCategoriesIdPage() {
   };
 
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
-      const res = await fetch(`/api/admin/categories/${id}`);
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const { category }: { category: Category } = await res.json();
       setName(category.name);
     };
 
     fetcher();
-  }, [id]);
+  }, [id, token]);
 
   return (
     <div className="w-full p-4">

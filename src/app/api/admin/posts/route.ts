@@ -1,12 +1,22 @@
 import { PostRequestBody } from "@/app/_types/PostRequestBody";
+import { supabase } from "@/utils/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
 
 /**
  * POSTの一覧を取得するAPI
+ * @param request - リクエスト
  * @returns レスポンス
  */
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     // Postテーブルのレコードを全て取得
     const posts = await prisma.post.findMany({
@@ -41,6 +51,14 @@ export const GET = async () => {
  * @returns レスポンス
  */
 export const POST = async (request: NextRequest) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     // リクエストのbodyを取得
     const body = await request.json();

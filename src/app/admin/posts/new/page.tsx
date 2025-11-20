@@ -1,6 +1,7 @@
 "use client";
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Category } from "@/app/_types/Category";
 import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { useRouter } from "next/navigation";
@@ -15,8 +16,12 @@ export default function AdminPostsNewPage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
+  const { token } = useSupabaseSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) return;
 
     try {
       setIsSubmitting(true);
@@ -30,6 +35,7 @@ export default function AdminPostsNewPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token,
         },
         body: JSON.stringify(requestBody),
       });

@@ -1,3 +1,4 @@
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Category } from "@/app/_types/Category";
 import { MultiSelect } from "@/components/multi-select";
 import { useEffect, useState } from "react";
@@ -15,6 +16,8 @@ export const CategorySelect = ({
 }: CategorySelectProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const { token } = useSupabaseSession();
+
   const handleChange = (values: string[]) => {
     const newSelectedCategories = categories.filter((category) =>
       values.includes(category.id.toString())
@@ -23,14 +26,21 @@ export const CategorySelect = ({
   };
 
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
-      const res = await fetch("/api/admin/categories");
+      const res = await fetch("/api/admin/categories", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const { categories } = await res.json();
-      setCategories(categories);
+      setCategories(categories || []);
     };
 
     fetcher();
-  }, []);
+  }, [token]);
 
   return (
     <MultiSelect

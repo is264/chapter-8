@@ -1,6 +1,7 @@
 "use client";
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Category } from "@/app/_types/Category";
 import { Post } from "@/app/_types/Post";
 import { PostRequestBody } from "@/app/_types/PostRequestBody";
@@ -17,8 +18,12 @@ export default function AdminPostsIdPage() {
   const { id } = useParams();
   const router = useRouter();
 
+  const { token } = useSupabaseSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) return;
 
     try {
       const requestBody: PostRequestBody = {
@@ -33,6 +38,7 @@ export default function AdminPostsIdPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token,
         },
         body: JSON.stringify(requestBody),
       });
@@ -49,10 +55,16 @@ export default function AdminPostsIdPage() {
   const handleDeletePost = async () => {
     if (!confirm("記事を削除しますか？")) return;
 
+    if (!token) return;
+
     try {
       setIsSubmitting(true);
       await fetch(`/api/admin/posts/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       });
 
       alert("記事を削除しました。");
@@ -67,8 +79,15 @@ export default function AdminPostsIdPage() {
   };
 
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
-      const res = await fetch(`/api/admin/posts/${id}`);
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const { post }: { post: Post } = await res.json();
       setTitle(post.title);
       setContent(post.content);
@@ -77,7 +96,7 @@ export default function AdminPostsIdPage() {
     };
 
     fetcher();
-  }, [id]);
+  }, [id, token]);
 
   return (
     <div className="w-full p-4">
