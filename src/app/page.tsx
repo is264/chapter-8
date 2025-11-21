@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <ul className="flex flex-col gap-8 w-[800px] mx-auto my-10">
-      {posts.length > 0 ? (
+      {posts?.length > 0 ? (
         posts.map((post: MicroCmsPost) => {
           return (
             <li key={post.id} className="border border-[#ccc] p-4">
