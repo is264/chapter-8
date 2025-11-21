@@ -11,7 +11,7 @@ import { PostForm } from "../_components/PostForm";
 export default function AdminPostsNewPage() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function AdminPostsNewPage() {
         title,
         content,
         categories,
-        thumbnailUrl,
+        thumbnailImageKey,
       };
       await fetch("/api/admin/posts", {
         method: "POST",
@@ -61,8 +61,8 @@ export default function AdminPostsNewPage() {
         setTitle={setTitle}
         content={content}
         setContent={setContent}
-        thumbnailUrl={thumbnailUrl}
-        setThumbnailUrl={setThumbnailUrl}
+        thumbnailImageKey={thumbnailImageKey}
+        setThumbnailImageKey={setThumbnailImageKey}
         selectedCategories={categories}
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}

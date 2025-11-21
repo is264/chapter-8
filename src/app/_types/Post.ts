@@ -12,8 +12,8 @@ export interface Post {
   content: string;
   /** カテゴリー */
   postCategories: { category: Category }[];
-  /** サムネイルURL */
-  thumbnailUrl: string;
+  /** サムネイル画像のキー */
+  thumbnailImageKey: string;
   /** 作成日時 */
   createdAt: string;
 }

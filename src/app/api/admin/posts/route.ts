@@ -62,14 +62,15 @@ export const POST = async (request: NextRequest) => {
   try {
     // リクエストのbodyを取得
     const body = await request.json();
-    const { title, content, categories, thumbnailUrl }: PostRequestBody = body;
+    const { title, content, categories, thumbnailImageKey }: PostRequestBody =
+      body;
 
     // POSTテーブルにレコードを作成
     const data = await prisma.post.create({
       data: {
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
       },
     });
 

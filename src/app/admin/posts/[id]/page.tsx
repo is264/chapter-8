@@ -12,7 +12,7 @@ import { PostForm } from "../_components/PostForm";
 export default function AdminPostsIdPage() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { id } = useParams();
@@ -30,7 +30,7 @@ export default function AdminPostsIdPage() {
         title,
         content,
         categories,
-        thumbnailUrl,
+        thumbnailImageKey,
       };
 
       // 記事を更新します。
@@ -91,7 +91,7 @@ export default function AdminPostsIdPage() {
       const { post }: { post: Post } = await res.json();
       setTitle(post.title);
       setContent(post.content);
-      setThumbnailUrl(post.thumbnailUrl);
+      setThumbnailImageKey(post.thumbnailImageKey);
       setCategories(post.postCategories.map((pc) => pc.category));
     };
 
@@ -109,8 +109,8 @@ export default function AdminPostsIdPage() {
         setTitle={setTitle}
         content={content}
         setContent={setContent}
-        thumbnailUrl={thumbnailUrl}
-        setThumbnailUrl={setThumbnailUrl}
+        thumbnailImageKey={thumbnailImageKey}
+        setThumbnailImageKey={setThumbnailImageKey}
         selectedCategories={categories}
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}

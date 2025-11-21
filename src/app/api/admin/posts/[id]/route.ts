@@ -70,7 +70,7 @@ export const PUT = async (
 
   const { id } = params;
 
-  const { title, content, categories, thumbnailUrl }: PostRequestBody =
+  const { title, content, categories, thumbnailImageKey }: PostRequestBody =
     await request.json();
 
   try {
@@ -82,7 +82,7 @@ export const PUT = async (
       data: {
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
       },
     });
 

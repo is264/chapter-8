@@ -8,6 +8,6 @@ export type PostRequestBody = {
   content: string;
   /** カテゴリー */
   categories: { id: number }[];
-  /** サムネイルURL */
-  thumbnailUrl: string;
+  /** サムネイル画像のキー */
+  thumbnailImageKey: string;
 };
