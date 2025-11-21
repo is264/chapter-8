@@ -1,6 +1,7 @@
 "use client";
 
 import { POST_FORM_MODE } from "@/app/_constants/const";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Category } from "@/app/_types/Category";
 import { PostRequestBody } from "@/app/_types/PostRequestBody";
 import { useRouter } from "next/navigation";
@@ -10,13 +11,17 @@ import { PostForm } from "../_components/PostForm";
 export default function AdminPostsNewPage() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
+  const { token } = useSupabaseSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) return;
 
     try {
       setIsSubmitting(true);
@@ -24,12 +29,13 @@ export default function AdminPostsNewPage() {
         title,
         content,
         categories,
-        thumbnailUrl,
+        thumbnailImageKey,
       };
       await fetch("/api/admin/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token,
         },
         body: JSON.stringify(requestBody),
       });
@@ -55,8 +61,8 @@ export default function AdminPostsNewPage() {
         setTitle={setTitle}
         content={content}
         setContent={setContent}
-        thumbnailUrl={thumbnailUrl}
-        setThumbnailUrl={setThumbnailUrl}
+        thumbnailImageKey={thumbnailImageKey}
+        setThumbnailImageKey={setThumbnailImageKey}
         selectedCategories={categories}
         setSelectedCategories={setCategories}
         onSubmit={handleSubmit}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouteGuard } from "@/app/_hooks/useRouteGuard";
 import { NavItem } from "@/app/_types/NavItem";
 import clsx from "clsx";
 import Link from "next/link";
@@ -11,8 +12,9 @@ const navItems: NavItem[] = [
 ];
 
 export const SideBer = () => {
-  const pathname = usePathname();
+  useRouteGuard();
 
+  const pathname = usePathname();
   const isActive = (href: string): boolean => {
     return pathname === href || pathname?.startsWith(`${href}/`);
   };

@@ -2,24 +2,24 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ブログ記事テーブル
 model Post {
-  id             Int            @id @default(autoincrement())
-  title          String
-  content        String
-  thumbnailUrl   String
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  postCategories PostCategory[]
+  id                Int            @id @default(autoincrement())
+  title             String
+  content           String
+  thumbnailImageKey String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  postCategories    PostCategory[]
 }
 
 // カテゴリーテーブル

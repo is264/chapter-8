@@ -1,5 +1,6 @@
 "use client";
 
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Post } from "@/app/_types/Post";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -8,15 +9,24 @@ export default function AdminPostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const { token } = useSupabaseSession();
+
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
-      const res = await fetch(`/api/admin/posts`);
+      const res = await fetch("/api/admin/posts", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const data = await res.json();
-      setPosts(data.posts);
+      setPosts(data.posts || []);
       setIsLoading(false);
     };
     fetcher();
-  }, []);
+  }, [token]);
 
   return (
     <div className="w-full p-4">

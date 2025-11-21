@@ -1,4 +1,5 @@
 import { PostRequestBody } from "@/app/_types/PostRequestBody";
+import { supabase } from "@/utils/supabase";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
 
@@ -12,6 +13,14 @@ export const GET = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   const { id } = params;
 
   try {
@@ -51,9 +60,17 @@ export const PUT = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   const { id } = params;
 
-  const { title, content, categories, thumbnailUrl }: PostRequestBody =
+  const { title, content, categories, thumbnailImageKey }: PostRequestBody =
     await request.json();
 
   try {
@@ -65,7 +82,7 @@ export const PUT = async (
       data: {
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
       },
     });
 
@@ -104,6 +121,14 @@ export const DELETE = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+
   const { id } = params;
 
   try {
